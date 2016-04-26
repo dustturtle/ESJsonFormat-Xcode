@@ -1,3 +1,11 @@
+### ESJsonFormat-Xcode With YYModel
+###作了如下修改,使用更方便，格式更清晰（最主要的优化在于可以使用网络请求返回打印出来的数据直接来生成model）：  
+##1. 对多余的空行和缩进进行了规整，使用新建的model在xcode7.3下测试ok；  
+##2. 对输入的源数据（json字符串）进行了预处理，但不会改变原有的数据类型（比如数字），目前增加支持了：
+##a.缺少""的key; 
+##b.Xcode里面对响应的dictionary/array直接打印也可以作为输入（中文显示unicode编码问题可以通过fkconsole插件来解决)。  
+##3. 将mjextension里面的objectclassinarry方法改成yymodel的modelContainerPropertyGenericClass(笔者目前使用YYmodel)，这个只是搜索替换了字符串，可以很方便替换回来。
+
 ### ESJsonFormat-Xcode
 将JSON格式化输出为模型的属性　　　　个人活动范围>[Weibo-EnjoySR](http://weibo.com/EnjoySR)
 
