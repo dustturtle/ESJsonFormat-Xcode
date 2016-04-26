@@ -229,7 +229,51 @@
  *  检查是否是一个有效的JSON
  */
 -(id)dictionaryWithJsonStr:(NSString *)jsonString{
-    jsonString = [[jsonString stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    // gzw modified~
+    
+    // step1:替换所有的=号
+    jsonString = [jsonString stringByReplacingOccurrencesOfString:@"=" withString:@":"];
+    // step2:去掉所有的空格
+    jsonString = [jsonString stringByReplacingOccurrencesOfString:@" " withString:@""];
+    // step3:替换所有的;号为,号;替换所有的()号为[]
+    jsonString = [jsonString stringByReplacingOccurrencesOfString:@";" withString:@","];
+    jsonString = [jsonString stringByReplacingOccurrencesOfString:@"(" withString:@"["];
+    jsonString = [jsonString stringByReplacingOccurrencesOfString:@")" withString:@"]"];
+    
+    // step4:将:后面的纯数字加上特殊符号&，这里使用了一个小技巧，为了后续处理方便
+    NSString *patternBefore = [NSString stringWithFormat:@"(:)([0-9]+)"];
+    NSRegularExpression *beforeExpression =
+    [[NSRegularExpression alloc] initWithPattern:patternBefore
+                                         options:NSRegularExpressionCaseInsensitive
+                                           error:nil];
+    jsonString = [beforeExpression stringByReplacingMatchesInString:jsonString
+                                                                 options:0
+                                                                   range:NSMakeRange(0, jsonString.length)
+                                                            withTemplate:@"$1&$2&"];
+    
+    // step5:将:前面没有""的key添加上""
+    NSString *patternStr = [NSString stringWithFormat:@"(\\w+)(:)"];
+    NSRegularExpression *compatibleExpression = [[NSRegularExpression alloc] initWithPattern:patternStr
+                                                                                     options:NSRegularExpressionCaseInsensitive
+                                                                                       error:nil];
+    jsonString = [compatibleExpression stringByReplacingMatchesInString:jsonString
+                                                                options:0
+                                                                  range:NSMakeRange(0, jsonString.length)
+                                                           withTemplate:@"\"$1\"$2"];
+    
+    // step6:将:后面没有""的value添加上""(注意step4，因为有step4的存在数字不会被添加)
+    NSString *patternStr2 = [NSString stringWithFormat:@"(:)(\\w+)"];
+    NSRegularExpression *compatibleExpression2 = [[NSRegularExpression alloc] initWithPattern:patternStr2
+                                                                                      options:NSRegularExpressionCaseInsensitive
+                                                                                        error:nil];
+    jsonString = [compatibleExpression2 stringByReplacingMatchesInString:jsonString
+                                                                 options:0
+                                                                   range:NSMakeRange(0, jsonString.length)
+                                                            withTemplate:@"$1\"$2\""];
+    // step7:干掉之前引入的&号
+    jsonString = [jsonString stringByReplacingOccurrencesOfString:@"&" withString:@""];
+    
     NSLog(@"jsonString=%@",jsonString);
     NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSError *err;

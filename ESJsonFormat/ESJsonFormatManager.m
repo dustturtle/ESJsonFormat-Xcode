@@ -165,11 +165,12 @@
         return @"";
     }
     
+    //gzw
     NSMutableString *result = [NSMutableString stringWithString:@""];
     if ([ESJsonFormatSetting defaultSetting].impOjbClassInArray) {
-        [result appendFormat:@"@implementation %@\n%@\n@end\n",classInfo.className,[self methodContentOfObjectClassInArrayWithClassInfo:classInfo]];
+        [result appendFormat:@"\n@implementation %@%@\n@end\n",classInfo.className,[self methodContentOfObjectClassInArrayWithClassInfo:classInfo]];
     }else{
-        [result appendFormat:@"@implementation %@\n\n@end\n",classInfo.className];
+        [result appendFormat:@"\n@implementation %@\n@end\n",classInfo.className];
     }
     
     if ([ESJsonFormatSetting defaultSetting].outputToFiles) {
@@ -195,15 +196,15 @@
  *  @return
  */
 + (NSString *)parseClassHeaderContentForOjbcWithClassInfo:(ESClassInfo *)classInfo{
-    NSMutableString *result = [NSMutableString stringWithFormat:@"@interface %@ : NSObject\n",classInfo.className];
+    NSMutableString *result = [NSMutableString stringWithFormat:@"\n@interface %@ : NSObject\n",classInfo.className];
     [result appendString:classInfo.propertyContent];
-    [result appendString:@"\n@end"];
+    [result appendString:@"\n@end\n"];
     
     if ([ESJsonFormatSetting defaultSetting].outputToFiles) {
         //headerStr
         NSMutableString *headerString = [NSMutableString stringWithString:[self dealHeaderStrWithClassInfo:classInfo type:@"h"]];
         //@class
-        [headerString appendString:[NSString stringWithFormat:@"%@\n\n",classInfo.atClassContent]];
+        [headerString appendString:[NSString stringWithFormat:@"%@\n",classInfo.atClassContent]];
         [result insertString:headerString atIndex:0];
     }
     return [result copy];
@@ -250,7 +251,7 @@
             result = [NSMutableString stringWithFormat:@"%@",[result substringToIndex:result.length-2]];
         }
         //append method content (objectClassInArray)
-        NSString *methodStr = [NSString stringWithFormat:@"\n+ (NSDictionary *)objectClassInArray{\n    return @{%@};\n}\n",result];
+        NSString *methodStr = [NSString stringWithFormat:@"+ (NSDictionary *)modelContainerPropertyGenericClass{\n    return @{%@};\n}\n",result];
         return methodStr;
     }
 }
@@ -288,9 +289,9 @@
     if ([type isEqualToString:@"h"] || [type isEqualToString:@"switf"]) {
         NSMutableString *string = [NSMutableString stringWithString:templateString];
         if ([type isEqualToString:@"h"]) {
-            [string appendString:@"#import <Foundation/Foundation.h>\n\n"];
+            [string appendString:@"#import <Foundation/Foundation.h>\n"];
         }else{
-            [string appendString:@"import UIKit\n\n"];
+            [string appendString:@"import UIKit\n"];
         }
         templateString = [string copy];
     }

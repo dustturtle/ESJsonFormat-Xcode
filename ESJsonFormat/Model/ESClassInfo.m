@@ -92,13 +92,14 @@
     NSMutableString *result = [NSMutableString stringWithFormat:@""];
     for (NSString *key in self.propertyClassDic) {
         ESClassInfo *classInfo = self.propertyClassDic[key];
-        [result appendFormat:@"%@\n\n",classInfo.classContentForH];
+        //gzw
+        [result appendFormat:@"%@",classInfo.classContentForH];
         [result appendString:classInfo.classInsertTextViewContentForH];
     }
     
     for (NSString *key in self.propertyArrayDic) {
         ESClassInfo *classInfo = self.propertyArrayDic[key];
-        [result appendFormat:@"%@\n\n",classInfo.classContentForH];
+        [result appendFormat:@"%@",classInfo.classContentForH];
         [result appendString:classInfo.classInsertTextViewContentForH];
     }
     return result;
@@ -108,13 +109,13 @@
     NSMutableString *result = [NSMutableString stringWithFormat:@""];
     for (NSString *key in self.propertyClassDic) {
         ESClassInfo *classInfo = self.propertyClassDic[key];
-        [result appendFormat:@"%@\n\n",classInfo.classContentForM];
+        [result appendFormat:@"%@",classInfo.classContentForM];
         [result appendString:classInfo.classInsertTextViewContentForM];
     }
     
     for (NSString *key in self.propertyArrayDic) {
         ESClassInfo *classInfo = self.propertyArrayDic[key];
-        [result appendFormat:@"%@\n\n",classInfo.classContentForM];
+        [result appendFormat:@"%@",classInfo.classContentForM];
         [result appendString:classInfo.classInsertTextViewContentForM];
     }
     return result;
